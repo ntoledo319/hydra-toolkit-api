@@ -184,13 +184,13 @@ def validate_json(data: JsonInput):
         parsed = json.loads(data.text)
         pretty = json.dumps(parsed, indent=2)
         minified = json.dumps(parsed, separators=(',', ':'))
-        def count_keys(obj, depth=0):
+        def count_keys(obj):
             if isinstance(obj, dict):
-                return sum(1 + count_keys(v, depth+1) for v in obj.values()), depth
+                return len(obj) + sum(count_keys(v) for v in obj.values())
             elif isinstance(obj, list):
-                return sum(count_keys(i, depth+1) for i in obj), depth
-            return 0, depth
-        keys, _ = count_keys(parsed)
+                return sum(count_keys(i) for i in obj)
+            return 0
+        keys = count_keys(parsed)
         return {"valid": True, "pretty": pretty, "minified": minified, "type": type(parsed).__name__,
                 "keys": keys, "pretty_length": len(pretty), "minified_length": len(minified)}
     except json.JSONDecodeError as e:
