@@ -1,0 +1,295 @@
+# Claim ledger — material historical claims with provenance.
+# evidence_type: direct | contemporaneous | retrospective | behavioral | inferred
+# status: verified | reported | inferred | disputed | unknown
+# confidence: confirmed | strongly_supported | plausible | speculative | unknown
+# Times in locators are UTC unless marked EDT (UTC-4, the author's commit timezone).
+claims:
+  - claim_id: ha-c01
+    claim: >-
+      The repository began on 2026-03-26 at 05:13:09Z (01:13 EDT) with a single 437-line FastAPI file
+      exposing 26 routes (24 utilities plus / and /health), a 31-line README and three pinned dependencies;
+      the GitHub repository was created two seconds later.
+    date: 2026-03-26
+    source_ids: [src-git-hydra-api, src-gh-metadata]
+    locator: "commit ff404c6030c6529b28dbc50ff7b80f1031eb7916 (main.py, README.md, requirements.txt); gh api created_at 2026-03-26T05:13:15Z"
+    evidence_type: direct
+    status: verified
+    confidence: confirmed
+    rationale: Root commit tree and GitHub creation timestamp read directly.
+    caveats: The first commit imports finished work; the idea's birth is earlier and unrecorded (see ha-c14, ha-c15, ha-c23).
+  - claim_id: ha-c02
+    claim: >-
+      Eighty-nine seconds after the root commit, a tuple-unpacking bug in the json/validate key counter was fixed,
+      and the CPython 3.12 bytecode cache was committed alongside the fix.
+    date: 2026-03-26
+    source_ids: [src-git-hydra-api]
+    locator: "commit 58f61160f054a28da6573e37adadd943fd188e12 (main.py +5/-5; __pycache__/main.cpython-312.pyc added)"
+    evidence_type: direct
+    status: verified
+    confidence: confirmed
+    rationale: Diff read; the .pyc is a tracked binary whose content was not inspected.
+    caveats: The bug fix shows the code was executed locally at least once before the Worker port.
+  - claim_id: ha-c03
+    claim: >-
+      At 06:11:04Z (02:11 EDT) a Render blueprint was added (free plan, Oregon, uvicorn start command,
+      autoDeploy true, PYTHON_VERSION 3.11.0) together with a .gitignore that ignores the already-tracked bytecode.
+    date: 2026-03-26
+    source_ids: [src-git-hydra-api]
+    locator: "commit 0106964e92fa29d6a9cde46fa652839cb282b302 (render.yaml, .gitignore)"
+    evidence_type: direct
+    status: verified
+    confidence: confirmed
+    rationale: Diff read in full.
+    caveats: A blueprint file is intent to deploy, not evidence of a deployment.
+  - claim_id: ha-c04
+    claim: >-
+      Seventeen minutes later (06:28:23Z, 02:28 EDT) the sibling repository hydra-worker was born with a Hono/Cloudflare
+      Workers implementation that is a route-for-route port of this file: all 26 routes match, identifier overlap is 0.82,
+      the stop-word list, name/company tables and password heuristics are the same, and the Worker's `/` banner links its
+      `docs` to this repository.
+    date: 2026-03-26
+    source_ids: [src-git-hydra-worker, src-git-hydra-api]
+    locator: "commit 2a804e67b5eb84bb52ddd4950fa41b0aa533959b (hydra-worker src/index.js) compared with ff404c6030c6529b28dbc50ff7b80f1031eb7916 (main.py)"
+    evidence_type: behavioral
+    status: verified
+    confidence: confirmed
+    rationale: Mechanical route extraction and literal comparison performed on 2026-09-04; the docs link is in the Worker source.
+    caveats: Which file was typed first inside the session is unknowable from git; commit order is the only chronology.
+  - claim_id: ha-c05
+    claim: >-
+      No evidence of this service ever being deployed exists: .toledo.yaml records deployment url null (2026-05-05), the
+      2026-07-20 ship queue still lists "Render -> Blueprint -> connect" as a 20-minute to-do, and hydra-toolkit-api.onrender.com
+      returned 404 with x-render-routing no-server on 2026-08-06 and again on 2026-09-04.
+    date_range: 2026-03-26..2026-09-04
+    source_ids: [src-tc-meta-inventory-2026-05, src-tc-root-reports-2026-07, src-tc-audit-2026-08, src-live-probe]
+    locator: "migration-plan.md .toledo.yaml excerpt; SHIP-QUEUE-2026-07-20.md row 9; backburner-hydra-api.md section 3; probe 2026-09-04"
+    evidence_type: behavioral
+    status: verified
+    confidence: strongly_supported
+    rationale: Four independent observations across five months agree; none shows a live service.
+    caveats: Absence of evidence is not proof; only the Render dashboard (inaccessible) could confirm that no service was ever created.
+  - claim_id: ha-c06
+    claim: >-
+      The code has no authentication, no rate limiting, no billing hook and wildcard CORS; every handler is a pure function of
+      the request, and the README signs the work "Built by Toledo Technologies LLC".
+    date: 2026-03-26
+    source_ids: [src-git-hydra-api]
+    locator: "ff404c6030c6529b28dbc50ff7b80f1031eb7916:main.py lines 16-24 (CORSMiddleware allow_origins *) and README.md"
+    evidence_type: direct
+    status: verified
+    confidence: confirmed
+    rationale: Full read of main.py.
+    caveats: none
+  - claim_id: ha-c07
+    claim: >-
+      On 2026-05-05 the workspace migration moved the checkout from the macOS CascadeProjects directory into backburner/ and
+      generated an untracked .toledo.yaml marking status backburner, type revenue, platform render, url null.
+    date: 2026-05-05
+    source_ids: [src-tc-meta-inventory-2026-05, src-worktree-2026-09-04]
+    locator: "migration-log.txt lines 162-164 and 229; migration-plan.md .toledo.yaml excerpt; untracked .toledo.yaml in the tree"
+    evidence_type: contemporaneous
+    status: verified
+    confidence: confirmed
+    rationale: Machine-written log with timestamps; file present and untracked today.
+    caveats: The "revenue" label was assigned by tooling/owner at migration time, not by the code.
+  - claim_id: ha-c08
+    claim: >-
+      The Worker README (2026-04-03) lists this repository under "Also Available" as the "Python/FastAPI version", and the
+      owner's 2026-06-23 portfolio calls it "a parallel Python/FastAPI variant for a possible RapidAPI listing".
+    date_range: 2026-04-03..2026-06-23
+    source_ids: [src-git-hydra-worker, src-tc-master-portfolio]
+    locator: "hydra-worker commit 465f28476f262c580f8e9a10638851209cafe88c README.md 'Also Available'; MASTER-PORTFOLIO.md section HYDRA (toledo-command commit 73e342abef33abc9161838c868d5f3939d92e721)"
+    evidence_type: contemporaneous
+    status: verified
+    confidence: confirmed
+    rationale: Both statements read in their committed form.
+    caveats: These are statements of framing; they do not establish that a RapidAPI listing exists.
+  - claim_id: ha-c09
+    claim: >-
+      Later owner records reinterpret the repository: the 2026-08-03 registry note calls it the "earlier Python/FastAPI
+      predecessor ... never deployed ... superseded/shelved"; the 2026-08-06 dossier verdict is PARK / FIX; the rule-based estate
+      audit says KILL ("under 500 logical lines and under 10 commits").
+    date_range: 2026-08-03..2026-08-06
+    source_ids: [src-tc-registry-hydra, src-tc-audit-2026-08, src-tc-estate-audit-2026-08]
+    locator: "registry/assets/hydra.md 'Relationship to siblings'; audit-2026-08/assets/backburner-hydra-api.md section 7; estate-audit-2026-08/assets/backburner-hydra-api.md"
+    evidence_type: retrospective
+    status: reported
+    confidence: confirmed
+    rationale: Direct quotations from dated documents; they are opinions about the repo, recorded as such.
+    caveats: All three were written by AI auditing agents on the owner's behalf; they are not the owner's own words.
+  - claim_id: ha-c10
+    claim: >-
+      The GitHub repository is public, has no licence file, no topics, no issues, pull requests, releases or tags, and has not
+      been pushed since 2026-03-26T06:11:05Z; local master equals origin/master.
+    date: 2026-09-04
+    source_ids: [src-gh-metadata, src-git-hydra-api]
+    locator: "gh api repos/ntoledo319/hydra-toolkit-api (pushed_at, visibility, license null); git for-each-ref"
+    evidence_type: behavioral
+    status: verified
+    confidence: confirmed
+    rationale: Read-only API and local ref inspection on the audit date.
+    caveats: Visibility can change without a commit; re-verify before relying on it.
+  - claim_id: ha-c11
+    claim: >-
+      The tracked bytecode file was regenerated locally on 2026-07-20 (file mtime 19:49 local), the same day the owner's
+      ship queue scheduled "hydra-api (Render)"; main.py was therefore imported or run locally that day under CPython 3.12.
+    date: 2026-07-20
+    source_ids: [src-worktree-2026-09-04, src-tc-root-reports-2026-07]
+    locator: "__pycache__/main.cpython-312.pyc mtime 2026-07-20 19:49; SHIP-QUEUE-2026-07-20.md rows 9 and Wk 3"
+    evidence_type: behavioral
+    status: inferred
+    confidence: plausible
+    rationale: A .pyc is rewritten only when the module is imported with a newer source or interpreter; the coincidence with the ship-queue date is suggestive.
+    caveats: The mtime could reflect any import (a linter, an audit script); the interpretation that a deploy was attempted is inference, not fact.
+  - claim_id: ha-c12
+    claim: >-
+      The September 2026 credential purge examined this history, matched only "public configuration / placeholder" pattern
+      classes (RETAINED_PUBLIC_CLASS), confirmed no secret, and did not rewrite or force-push it.
+    date: 2026-09-02
+    source_ids: [src-purge-2026-09, src-gh-metadata]
+    locator: "history-pattern-final-classification.json rows affecting backburner/hydra-api; SECURITY_CLEANUP_REPORT.md table (repo absent from the rewritten list); remote master still 0106964e92fa29d6a9cde46fa652839cb282b302"
+    evidence_type: contemporaneous
+    status: verified
+    confidence: confirmed
+    rationale: Classification records read with values omitted; remote ref compared.
+    caveats: none
+  - claim_id: ha-c13
+    claim: >-
+      Whether a RapidAPI listing for HYDRA (in any form) was ever created is unknown: the Worker README asserts "Listed for
+      marketplace discovery", no repository, portfolio, audit or marketing document evidences a listing, and the RapidAPI
+      dashboard was not consulted.
+    date_range: 2026-04-03..2026-09-04
+    source_ids: [src-git-hydra-worker, src-tc-audit-2026-08, src-marketing-arm, src-inaccessible-rapidapi]
+    locator: "hydra-worker README 'RapidAPI: Listed for marketplace discovery'; audit dossier 'UNVERIFIED'; marketing-arm KILL-LIST 'no price set'"
+    evidence_type: inferred
+    status: unknown
+    confidence: unknown
+    rationale: The only affirmative statement is a README line; every later reviewer marks it unverified.
+    caveats: A listing can exist privately in a provider account with no public trace.
+  - claim_id: ha-c14
+    claim: >-
+      NoHustle API (2025-08-18..21) shares this project's author, its RapidAPI-marketplace thesis and its Render-first hosting
+      habit, but shares no route, no distinctive literal, no dependency beyond the language, and neither repository, nor any
+      portfolio document, references the other.
+    date_range: 2025-08-18..2026-03-26
+    source_ids: [src-git-nohustle, src-git-hydra-api, src-tc-master-portfolio, src-tc-audit-2026-08]
+    locator: "route/identifier comparison 2026-09-04 (shared routes: / and /health only; identifier overlap 0.28); grep of both trees and toledo-command for cross-references"
+    evidence_type: behavioral
+    status: verified
+    confidence: confirmed
+    rationale: Mechanical comparison plus exhaustive text search.
+    caveats: Shared authorship and thesis are real; code lineage is absent.
+  - claim_id: ha-c15
+    claim: >-
+      HYDRA's design inverts every point where NoHustle stalled — heavy ML dependencies became zero dependencies, SQLite usage
+      analytics became statelessness, API keys and paid tiers became keyless and free, BSL 1.1 became MIT, and Render became the
+      edge — which reads as a lesson learned, but no source states that intent.
+    date: 2026-03-26
+    source_ids: [src-git-nohustle, src-git-hydra-api, src-git-hydra-worker, src-git-thing]
+    locator: "NoHustle requirements/render.yaml/LICENSE vs hydra-api requirements/main.py vs hydra-worker LICENSE/README"
+    evidence_type: inferred
+    status: inferred
+    confidence: plausible
+    rationale: The contrasts are exact and systematic; the causal reading is the historian's inference.
+    caveats: The same contrasts are consistent with simply picking an easier product; the authoring session logs (inaccessible) would settle it.
+  - claim_id: ha-c16
+    claim: >-
+      The endpoint count is stated inconsistently across the family: this README says "20+", the Worker README and GitHub
+      description say 22, the live Worker banner hard-codes 20, and the code in both repositories has 24 utility routes.
+    date_range: 2026-03-26..2026-09-04
+    source_ids: [src-git-hydra-api, src-git-hydra-worker, src-live-probe, src-tc-registry-hydra]
+    locator: "README.md; hydra-worker README.md; probe of / on 2026-09-04 (endpoints 20); route extraction"
+    evidence_type: direct
+    status: verified
+    confidence: confirmed
+    rationale: Counted from source.
+    caveats: The count 22 is defensible if /time/convert and /crypto/base64/decode are grouped with siblings; the numbers were never reconciled.
+  - claim_id: ha-c17
+    claim: >-
+      FastAPI's generated Swagger (/docs) and ReDoc (/redoc) pages were part of this design; the Worker port has no equivalent and
+      compensated eight days later with a hand-written openapi.json and an HTML playground.
+    date_range: 2026-03-26..2026-04-03
+    source_ids: [src-git-hydra-api, src-git-hydra-worker]
+    locator: "main.py FastAPI(docs_url=/docs, redoc_url=/redoc); hydra-worker commit 6808ec82597245fd620b15a45f15483b67699d78 (openapi.json, docs/index.html)"
+    evidence_type: direct
+    status: verified
+    confidence: confirmed
+    rationale: Both trees read.
+    caveats: Whether the missing docs were a reason to keep this repo alive is inferred (see goal g-python-reference).
+  - claim_id: ha-c18
+    claim: >-
+      The lead's dispatch brief recorded this repository's dirty baseline as ".env.example" and hydra-worker's as the
+      bytecode/.claude/.toledo.yaml set; the working trees show the reverse — this repository carries the modified bytecode,
+      the untracked .claude/settings.local.json and the untracked .toledo.yaml, while hydra-worker is clean.
+    date: 2026-09-04
+    source_ids: [src-leaf-brief-2026-09-04, src-worktree-2026-09-04]
+    locator: "PLAN.md 'Pre-existing dirty baselines'; git status --porcelain -uall in both repositories"
+    evidence_type: behavioral
+    status: verified
+    confidence: confirmed
+    rationale: Measured on the audit date before any change was made.
+    caveats: This is a fact about the reconstruction process, recorded so the verifier discrepancy is explicable.
+  - claim_id: ha-c19
+    claim: >-
+      An agent permissions file (.claude/settings.local.json allowing two Gmail MCP tools) appeared in the checkout on
+      2026-08-16, showing an AI-assistant session was opened in this directory that day; no commit followed.
+    date: 2026-08-16
+    source_ids: [src-worktree-2026-09-04]
+    locator: ".claude/settings.local.json mtime 2026-08-16 17:14 (content: tool allow-list only)"
+    evidence_type: behavioral
+    status: inferred
+    confidence: plausible
+    rationale: The file is created by the assistant when a permission is granted inside this working directory.
+    caveats: The purpose of that session is unknown; it may have been unrelated to the code.
+  - claim_id: ha-c20
+    claim: >-
+      The Worker, not this service, became the deployed HYDRA surface: the Worker README of 2026-04-03 already publishes a live
+      workers.dev URL and "$0 on Workers free tier", and it still answers 200 on 2026-09-04.
+    date_range: 2026-04-03..2026-09-04
+    source_ids: [src-git-hydra-worker, src-live-probe]
+    locator: "hydra-worker commit 465f28476f262c580f8e9a10638851209cafe88c README 'Live API'; probe 2026-09-04 HTTP 200 in 0.13 s"
+    evidence_type: behavioral
+    status: verified
+    confidence: confirmed
+    rationale: Committed README plus live probe.
+    caveats: The reason the edge won (cost, latency, cold starts) is stated only in the Worker's marketing copy, not as a decision record.
+  - claim_id: ha-c21
+    claim: >-
+      The three-dependency posture (fastapi 0.115.6, uvicorn 0.34.0, pydantic 2.10.4) and standard-library-only utilities were
+      deliberate design, matching the "zero dependencies beyond Hono" line the Worker later advertised.
+    date: 2026-03-26
+    source_ids: [src-git-hydra-api, src-git-hydra-worker]
+    locator: "requirements.txt at ff404c6030c6529b28dbc50ff7b80f1031eb7916; hydra-worker README 'Zero dependencies beyond Hono'"
+    evidence_type: direct
+    status: verified
+    confidence: strongly_supported
+    rationale: The dependency list is minimal and stayed so; the sibling states the principle explicitly.
+    caveats: '"Deliberate" is inferred from consistency across both repositories, not from a written decision.'
+  - claim_id: ha-c22
+    claim: >-
+      The workspace registry, marketing-machine documents and asset-sale kit treat "hydra" as one product (the Worker) and never
+      name this repository; its only independent mentions after April are inventory rows and audit dossiers.
+    date_range: 2026-06-05..2026-08-06
+    source_ids: [src-business-ops, src-marketing-arm, src-tc-workspace-registry]
+    locator: "business-ops/assets-for-sale/*.md (HYDRA sections); marketing-arm/portfolio.yml 'hydra'; toledo-command/workspace/project-overrides.json (no hydra-api entry)"
+    evidence_type: retrospective
+    status: verified
+    confidence: confirmed
+    rationale: Exhaustive grep of the named directories.
+    caveats: none
+  - claim_id: ha-c23
+    claim: >-
+      Nine weeks before this repository existed, the owner's 2026-01-17 codebase audit still rated NoHustle API
+      "Production-Ready", proposed merging it with TallySec and ComplyCrawl into one backend, and priced it as a
+      "$5-50/mo per user" SaaS utility API; HYDRA was nonetheless started from zero with none of that code, in a different
+      framework, free and keyless.
+    date: 2026-01-17
+    source_ids: [src-icloud-mycodemine-reports, src-git-nohustle, src-git-hydra-api]
+    locator: "MyCodeMine REPORTS 00_EXEC_SUMMARY.md lines 26, 73, 100 and 01_REPO_CATALOG.md line 614 (dated January 17, 2026); route/identifier comparison in ha-c14"
+    evidence_type: retrospective
+    status: verified
+    confidence: confirmed
+    rationale: The audit's wording was read directly; the absence of shared code is established mechanically by ha-c14.
+    caveats: >-
+      The audit is agent-written and never names HYDRA or a utility-API rebuild, so it shows the owner's January framing of
+      NoHustle, not a decision to replace it; why the reuse plan was not followed is unrecorded.

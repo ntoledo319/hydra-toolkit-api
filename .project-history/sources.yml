@@ -1,0 +1,196 @@
+# Source inventory — every source examined while reconstructing this history.
+# class: direct | contemporaneous | retrospective | behavioral | inferred | external
+# access: accessible | inaccessible | partial
+# Absolute local paths of related git repositories let cited commit shas resolve outside this repo.
+audit_date: 2026-09-04
+sources:
+  - id: src-git-hydra-api
+    kind: git repository (this project)
+    class: direct
+    access: accessible
+    local_path: /home/nick/Development/backburner/hydra-api
+    locator: https://github.com/ntoledo319/hydra-toolkit-api.git
+    retrieved_at: 2026-09-04
+    notes: >-
+      All 3 reachable commits (refs/heads/master, refs/remotes/origin/master) inventoried; every diff read
+      except the committed .pyc binary. Not shallow, not partial, no stash, no notes, no submodules.
+  - id: src-git-hydra-worker
+    kind: git repository (related; canonical HYDRA implementation)
+    class: direct
+    access: accessible
+    local_path: /home/nick/Development/active/hydra-worker
+    locator: https://github.com/ntoledo319/hydra-worker.git
+    retrieved_at: 2026-09-04
+    notes: The Cloudflare Worker port made 75 minutes after this repository's last commit. 4 reachable commits read in full.
+  - id: src-git-nohustle
+    kind: git repository (related; thematic predecessor)
+    class: direct
+    access: accessible
+    local_path: "/home/nick/Development/archive/NoHustle API"
+    locator: https://github.com/ntoledo319/NoHustle-API.git
+    retrieved_at: 2026-09-04
+    notes: >-
+      23 authored commits (2025-08-18..2025-08-21) read for lineage; no code, route or documentation reference links it to
+      HYDRA. On 2026-09-04 a read-only `git fetch --no-prune origin` advanced its origin/main to the 2026-09-01 security
+      commit (24 reachable commits); its local main was left untouched.
+  - id: src-git-hydra-site
+    kind: git repository (related; retired static mirror)
+    class: direct
+    access: accessible
+    local_path: /home/nick/Development/archive/duplicates/hydra-site
+    locator: https://github.com/ntoledo319/hydra-site.git
+    retrieved_at: 2026-09-04
+    notes: Single commit 2026-05-28; public/index.html byte-identical (sha256) to hydra-worker docs/index.html.
+  - id: src-git-thing
+    kind: git repository (related; NoHustle growth kit, 2025-08-22..29)
+    class: direct
+    access: accessible
+    local_path: /home/nick/Development/experiments/thing
+    locator: https://github.com/ntoledo319/spidermind-omega.git
+    retrieved_at: 2026-09-04
+    notes: Read only for the NoHustle marketing/free-tier arc that precedes HYDRA; push remote is disabled by the owner.
+  - id: src-git-toledo-command
+    kind: git repository (owner's private control-plane / portfolio index)
+    class: retrospective
+    access: accessible
+    local_path: /home/nick/Development/toledo-command
+    locator: /home/nick/Development/toledo-command
+    retrieved_at: 2026-09-04
+    notes: Only files mentioning hydra or nohustle were read; nothing personal was copied.
+  - id: src-gh-metadata
+    kind: GitHub REST metadata via authenticated gh (read-only)
+    class: external
+    access: accessible
+    locator: "gh api repos/ntoledo319/{hydra-toolkit-api,hydra-worker,NoHustle-API,hydra-site}"
+    retrieved_at: 2026-09-04
+    notes: >-
+      created_at/pushed_at/visibility/description/topics/license, commit lists, tag/release/PR/issue counts.
+      No pushes, issues, PRs or any write were made.
+  - id: src-live-probe
+    kind: read-only HTTP GET probes of public URLs
+    class: behavioral
+    access: accessible
+    locator: "https://hydra-toolkit-api.onrender.com/health ; https://hydra-worker.toledonick98.workers.dev/ ; https://nohustle-api.onrender.com/health"
+    retrieved_at: 2026-09-04
+    notes: Present-tense liveness only; a 404 with x-render-routing no-server means no service is bound to the hostname today, not that none ever was.
+  - id: src-worktree-2026-09-04
+    kind: uncommitted working-tree state at audit time
+    class: behavioral
+    access: accessible
+    locator: git status --porcelain -uall (M __pycache__/main.cpython-312.pyc; ?? .claude/settings.local.json; ?? .toledo.yaml)
+    retrieved_at: 2026-09-04
+    notes: Present-tense work in progress, not history. Preserved untouched. .claude/settings.local.json is an agent permission file (read as evidence only).
+  - id: src-tc-master-portfolio
+    kind: owner portfolio document (toledo-command/MASTER-PORTFOLIO.md, section HYDRA)
+    class: retrospective
+    access: accessible
+    locator: /home/nick/Development/toledo-command/MASTER-PORTFOLIO.md
+    retrieved_at: 2026-09-04
+    notes: Dated 2026-06-23 by its commit; calls this repo "a parallel Python/FastAPI variant for a possible RapidAPI listing".
+  - id: src-tc-registry-hydra
+    kind: owner asset registry note (toledo-command/registry/assets/hydra.md)
+    class: retrospective
+    access: accessible
+    locator: /home/nick/Development/toledo-command/registry/assets/hydra.md
+    retrieved_at: 2026-09-04
+    notes: Verified 2026-08-03; characterises this repo as the "earlier Python/FastAPI predecessor ... never deployed ... superseded/shelved".
+  - id: src-tc-audit-2026-08
+    kind: owner asset audit dossiers (toledo-command/audit-2026-08/assets/*.md, 03-TRUTH-VS-CLAIMS.md)
+    class: retrospective
+    access: accessible
+    locator: /home/nick/Development/toledo-command/audit-2026-08/assets/backburner-hydra-api.md
+    retrieved_at: 2026-09-04
+    notes: Dated 2026-08-06; agent-written; measured facts plus verdicts (PARK / FIX for this repo).
+  - id: src-tc-estate-audit-2026-08
+    kind: owner estate audit (toledo-command/estate-audit-2026-08/**)
+    class: retrospective
+    access: accessible
+    locator: /home/nick/Development/toledo-command/estate-audit-2026-08/assets/backburner-hydra-api.md
+    retrieved_at: 2026-09-04
+    notes: Dated 2026-08-06; rule-generated verdict KILL ("trivial: under 500 logical lines and under 10 commits").
+  - id: src-tc-root-reports-2026-07
+    kind: owner root reports (SHIP-QUEUE-2026-07-20, VALUE-AUDIT-GROUND-TRUTH-2026-07-20, DEEP-RESEARCH-2026-07-22)
+    class: retrospective
+    access: accessible
+    locator: /home/nick/Development/toledo-command/archive/root-reports-2026-07/
+    retrieved_at: 2026-09-04
+    notes: Ship queue lists "hydra-api ... ship_now ... Render -> Blueprint -> connect" as a not-yet-done step.
+  - id: src-tc-meta-inventory-2026-05
+    kind: workspace migration records (migration-log.txt, migration-plan.md, inventory-summary.md)
+    class: contemporaneous
+    access: accessible
+    locator: /home/nick/Development/toledo-command/archive/_meta-inventory-2026-05/
+    retrieved_at: 2026-09-04
+    notes: Machine log of the 2026-05-05 move from the CascadeProjects directory into backburner/ and the creation of .toledo.yaml.
+  - id: src-tc-workspace-registry
+    kind: workspace registry and overrides (registry.json, project-overrides.json, ROOT-LAYOUT.md, registry/REPOS.md)
+    class: retrospective
+    access: accessible
+    locator: /home/nick/Development/toledo-command/workspace/
+    retrieved_at: 2026-09-04
+    notes: Records lifecycle, canonical status and dirty counts as of the registry's last refresh.
+  - id: src-marketing-arm
+    kind: marketing-machine strategy docs (marketing-arm/portfolio.yml, KILL-LIST.md; toledo-command/strategy/marketing-machine/*)
+    class: retrospective
+    access: accessible
+    locator: /home/nick/Development/marketing-arm/portfolio.yml
+    retrieved_at: 2026-09-04
+    notes: Treats "hydra" as one product (the Worker); gate-fails it on "no price set".
+  - id: src-business-ops
+    kind: business-ops strategy hub (EXECUTIVE-SUMMARY.md, TOLEDO-CAPABILITIES.md, assets-for-sale/*)
+    class: retrospective
+    access: accessible
+    locator: /home/nick/Development/business-ops/assets-for-sale/MASTER-ASSET-INVENTORY.md
+    retrieved_at: 2026-09-04
+    notes: Dated 2026-06-05; HYDRA valued as a template / RapidAPI freemium candidate; this Python repo is not mentioned separately.
+  - id: src-icloud-ttllc-status
+    kind: owner status trackers synced from iCloud (DECISION_LOG, ASSETS_TRACKER, PRODUCT_CATALOG, MASTER_PORTFOLIO_TRACKER)
+    class: retrospective
+    access: accessible
+    locator: "/home/nick/Development/active/Mind/60 Sources/iCloud/Documents — TTLLC Status docs — *"
+    retrieved_at: 2026-09-04
+    notes: As of 2026-05-27; lists backburner/hydra-api as dirty with last commit 2026-03-26. Searched only for hydra/nohustle.
+  - id: src-icloud-mycodemine-reports
+    kind: owner codebase-audit reports synced from iCloud (MyCodeMine REPORTS 00_EXEC_SUMMARY, 01_REPO_CATALOG, 07_APP_IDEAS_RANKED, 08_TOP_3_EXECUTION_PLANS)
+    class: retrospective
+    access: accessible
+    locator: "/home/nick/Development/active/Mind/60 Sources/iCloud/App — MyCodeMine — REPORTS — 00_EXEC_SUMMARY.md"
+    retrieved_at: 2026-09-04
+    notes: >-
+      Dated 2026-01-17 (nine weeks before this repository). Agent-written portfolio audit that rates NoHustle API
+      "Production-Ready" and proposes reusing it; HYDRA is not mentioned. Only lines naming NoHustle or Hydra were read.
+  - id: src-purge-2026-09
+    kind: credential-purge records (SECURITY_CLEANUP_REPORT.md; .unlazy/credential-cleanup/verification/*.json)
+    class: contemporaneous
+    access: accessible
+    locator: /home/nick/Development/SECURITY_CLEANUP_REPORT.md
+    retrieved_at: 2026-09-04
+    notes: Sanitised facts only. This repository's history matched only RETAINED_PUBLIC_CLASS patterns; it was not rewritten.
+  - id: src-leaf-brief-2026-09-04
+    kind: lead agent's dispatch brief and PLAN.md baseline record for this reconstruction
+    class: contemporaneous
+    access: accessible
+    locator: /home/nick/Development/.unlazy/project-history/PLAN.md
+    retrieved_at: 2026-09-04
+    notes: Its recorded dirty baselines are cross-wired between hydra-worker and hydra-api (see contradiction hydra-api-c5).
+  - id: src-inaccessible-render-dashboard
+    kind: Render dashboard / deploy logs for hydra-toolkit-api
+    class: external
+    access: inaccessible
+    locator: https://dashboard.render.com (owner account; not opened)
+    retrieved_at: null
+    notes: Would settle whether a Render service was ever created from render.yaml. Not consulted (no browser, no account access in scope).
+  - id: src-inaccessible-rapidapi
+    kind: RapidAPI provider dashboard / listing state
+    class: external
+    access: inaccessible
+    locator: https://rapidapi.com (owner account; not opened)
+    retrieved_at: null
+    notes: Would settle whether any HYDRA listing was ever created. No repository, portfolio or audit document evidences one.
+  - id: src-inaccessible-authoring-sessions
+    kind: local AI-assistant session logs from the 2026-03-26 build (CascadeProjects directory suggests Windsurf/Cascade)
+    class: external
+    access: inaccessible
+    locator: /Users/nicholastoledo/CascadeProjects (former macOS path; directory unlinked 2026-05-05 per migration log)
+    retrieved_at: null
+    notes: Would reveal the prompt/intent behind the same-night FastAPI-then-Workers sequence. Inferred only from commit timing and code identity.

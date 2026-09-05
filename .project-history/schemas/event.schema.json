@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "project-history/event.schema.json",
+  "title": "Project-history event capsule front matter",
+  "description": "One capsule per material decision arc (need -> intent -> alternatives -> decision -> implementation -> result -> consequences). Validated by scripts/project_history validate. Backfilled capsules must carry recorded_at later than occurred_at.",
+  "type": "object",
+  "required": [
+    "id", "title", "kind", "scope", "significance",
+    "occurred_at", "decided_at", "merged_at", "released_at", "recorded_at", "last_verified_at",
+    "claim_ids", "source_ids", "status", "confidence", "secrets_reviewed"
+  ],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*-\\d{4}-\\d{2}-\\d{2}-[a-z0-9-]+$", "description": "stable id: <repo-slug>-<YYYY-MM-DD>-<slug>; equals the file name"},
+    "title": {"type": "string", "minLength": 8},
+    "kind": {"type": "string", "enum": ["origin", "decision", "release", "deployment", "migration", "reversal", "abandonment", "consolidation", "governance", "incident", "security", "licence", "experiment", "bootstrap"]},
+    "scope": {"type": "array", "items": {"type": "string"}, "description": "components or path globs the event constrains; 'project' for project-wide"},
+    "paths": {"type": "array", "items": {"type": "string"}},
+    "significance": {"type": "string", "enum": ["high", "medium", "low"]},
+    "summary": {"type": "string"},
+    "occurred_at": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "decided_at": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "merged_at": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "released_at": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "recorded_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "last_verified_at": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "backfilled": {"type": "boolean"},
+    "anchors": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "description": "reachable commit shas; may resolve in a related repository listed in sources.yml"},
+    "rewrite_resistant_locators": {"type": "array", "items": {"type": "string"}, "description": "tags, release ids, archived URLs, checksums"},
+    "claim_ids": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "source_ids": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "related_events": {"type": "array", "items": {"type": "string"}},
+    "amends": {"type": "array", "items": {"type": "string"}},
+    "supersedes": {"type": "array", "items": {"type": "string"}},
+    "reverses": {"type": "array", "items": {"type": "string"}},
+    "amendments": {"type": "array", "items": {"type": "object", "required": ["date", "reason", "confidence_moved"], "properties": {"date": {"type": "string"}, "reason": {"type": "string"}, "evidence": {"type": "string"}, "confidence_moved": {"type": "string"}}}},
+    "status": {"type": "string", "enum": ["open", "closed", "amended", "superseded"]},
+    "confidence": {"type": "string", "enum": ["confirmed", "strongly_supported", "plausible", "speculative", "unknown"]},
+    "observed_outcome": {"type": "string"},
+    "secrets_reviewed": {"type": "boolean", "const": true}
+  },
+  "additionalProperties": true,
+  "x-required-body-sections": [
+    "Before-state and pressure", "Intended beneficiaries", "Goal, non-goal and definition of success",
+    "Principles affected", "Alternatives and rejected paths", "Decision and rationale",
+    "Implementation and evidence", "Expected versus observed outcome",
+    "Tradeoffs, debt and consequences", "Related events", "Unresolved questions"
+  ]
+}

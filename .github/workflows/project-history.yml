@@ -1,0 +1,100 @@
+name: project-history
+
+# Guards the project-history ledgers of backburner/hydra-api.
+# This workflow only runs once these files are committed and pushed to GitHub; the repository
+# had no GitHub Actions before 2026-09-04 and nothing here claims it is active until then.
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  schedule:
+    - cron: "23 6 1 * *"   # monthly history gardener (first day of the month, 06:23 UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  history-check:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Detect history-only commit (prevents loops)
+        id: gate
+        run: |
+          subj="$(git log -1 --format=%s)"
+          if printf '%s\n' "$subj" | grep -Eq '^history:|^chore\(history\)|\[history-only\]'; then
+            echo "history_only=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "history_only=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Validate ledgers, schemas, ids, dates, anchors, secrets
+        run: python3 -B scripts/project_history.py validate --no-render-check
+      - name: Render drift check (committed output must already be rendered)
+        run: python3 -B scripts/project_history.py render --check
+      - name: History tool tests
+        run: python3 -B -m unittest -q tests/test_project_history.py
+      - name: Secret scan over history artifacts (standalone)
+        run: |
+          python3 - <<'PY'
+          import os, sys
+          sys.path.insert(0, "scripts")
+          import project_history as ph
+          hits = []
+          for base in ("PROJECT_HISTORY.md", "docs/history", ".project-history", "AGENTS.md"):
+              paths = [base] if os.path.isfile(base) else [os.path.join(d, f) for d, _, fs in os.walk(base) for f in fs]
+              for p in paths:
+                  with open(p, encoding="utf-8", errors="replace") as fh:
+                      for n, pat in ph._scan_secrets(fh.read()):
+                          hits.append(f"{p}:{n} ({pat}...)")
+          print("\n".join(hits) or "secret scan clean")
+          sys.exit(1 if hits else 0)
+          PY
+      - name: Incremental audit since the base of this change
+        if: steps.gate.outputs.history_only == 'false'
+        run: |
+          base="${{ github.event.pull_request.base.sha || github.event.before }}"
+          if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then base="HEAD~1"; fi
+          python3 -B scripts/project_history.py audit --since "$base"
+      - name: Advisory materiality assessment
+        if: steps.gate.outputs.history_only == 'false'
+        run: |
+          base="${{ github.event.pull_request.base.sha || github.event.before }}"
+          if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then base="HEAD~1"; fi
+          python3 -B scripts/project_history.py assess "$base..HEAD" || true
+      - name: Require exactly one history declaration in the PR body
+        if: github.event_name == 'pull_request' && steps.gate.outputs.history_only == 'false'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: python3 -B scripts/project_history.py declaration --text "$PR_BODY"
+
+  history-gardener:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Full audit — broken citations, unreachable anchors, rewritten ranges, stale goals, open events, expired deferrals
+        run: |
+          mkdir -p .project-history/reports
+          python3 -B scripts/project_history.py audit --full --report .project-history/reports/gardener-drift.md
+      - name: Publish the single drift report as the run artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: history-gardener-drift-report
+          path: .project-history/reports/gardener-drift.md
+          retention-days: 90
+      # The gardener never commits, never authors prose and never opens pull requests; it reports.
+      # Committing the report back to the repository would need `contents: write`, which is deliberately not granted.

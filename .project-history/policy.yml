@@ -1,0 +1,73 @@
+# Project-history policy — HYDRA Developer Toolkit API (backburner/hydra-api)
+# Parsed by scripts/project_history.py (strict YAML subset: block maps/lists, flow lists of scalars,
+# quoted strings, | and > block scalars). Keep it that simple.
+
+repository: ntoledo319/hydra-toolkit-api
+project: HYDRA Developer Toolkit API (hydra-api)
+local_path: /home/nick/Development/backburner/hydra-api
+default_branch: master
+docs_dir: docs/history
+history_dir: .project-history
+commands:
+  assess: python3 scripts/project_history.py assess
+  context: python3 scripts/project_history.py context
+  validate: python3 scripts/project_history.py validate
+  render: python3 scripts/project_history.py render
+  audit_full: python3 scripts/project_history.py audit --full
+  audit_incremental: python3 scripts/project_history.py audit --since HEAD~1
+  test: python3 -B -m unittest -q tests/test_project_history.py
+
+# Order in which docs/history chapters are assembled into PROJECT_HISTORY.md.
+render_order: [ORIENTATION.md, NARRATIVE.md, IDEOLOGY.md, GOALS.md, DECISION_MAP.md, TIMELINE.md, OPEN_QUESTIONS.md]
+
+# Materiality: record an event when purpose, audience, promise, principle, success metric, goal or
+# non-goal changes; when a durable interface/architecture/security/deployment/licence choice constrains
+# future work; on a meaningful release, migration, deprecation, incident, rollback or reversal; when an
+# experiment or discovery changes what the project believes; when a feature or removal changes identity.
+# Typos, formatting, generated refreshes, lockfile churn, fixups and behaviour-preserving refactors are noise.
+materiality:
+  material_paths:
+    - glob: main.py
+      why: the entire API surface, its defaults and its behaviour live in this one file
+    - glob: render.yaml
+      why: deployment shape (host, plan, region, auto-deploy) is a durable operating-model choice
+    - glob: requirements.txt
+      why: the three-dependency posture is a stated principle; new dependencies change it
+    - glob: README.md
+      why: the public promise (endpoint count, audience, deploy story) is stated here
+    - glob: LICENSE
+      why: licence terms are governance
+    - glob: .github/workflows/**
+      why: CI/automation changes the operating model
+    - glob: .toledo.yaml
+      why: lifecycle status and revenue classification are portfolio governance
+  noise_paths:
+    - docs/history/**
+    - .project-history/**
+    - PROJECT_HISTORY.md
+    - AGENTS.md
+    - scripts/project_history.py
+    - tests/test_project_history.py
+    - .github/PULL_REQUEST_TEMPLATE.md
+    - __pycache__/**
+    - "*.pyc"
+    - .gitignore
+  history_only_commit_patterns:
+    - "^history:"
+    - "^chore\\(history\\)"
+    - "\\[history-only\\]"
+
+cadence:
+  incremental_review: on every pull request (CI) and before any deployment decision
+  gardener: monthly scheduled audit --full with a drift report; release-time audit before any Render deploy
+
+# Deferrals: `history:defer` must be attributable and must expire. Each entry needs id, owner,
+# deadline (YYYY-MM-DD), tracking and status (open|closed). validate fails on expired open deferrals.
+deferrals: []
+
+# Repository identity facts the tool does not need but agents do.
+identity:
+  live_url: null
+  intended_host: Render (blueprint in render.yaml; never observed deployed)
+  sibling_canonical: /home/nick/Development/active/hydra-worker
+  sibling_predecessor_thematic: "/home/nick/Development/archive/NoHustle API"

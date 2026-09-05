@@ -1,0 +1,59 @@
+# Versioned principles. status: active | weakened | challenged | superseded | retired.
+# A new version of a principle must carry supersedes: {id, version} and the old version must be marked superseded.
+principles:
+  - id: p-one-file-stateless
+    version: 1
+    status: active
+    introduced_at: 2026-03-26
+    introduced_by_event: hydra-api-2026-03-26-fastapi-toolkit-v1
+    statement: >-
+      One file, no database, no persistent state, no outbound calls: every endpoint is a pure function of its request, so the
+      service can be read in one sitting and hosted anywhere.
+    revealed_by: main.py structure; absence of storage or HTTP clients
+    claim_ids: [ha-c01, ha-c06]
+    event_ids: [hydra-api-2026-03-26-fastapi-toolkit-v1]
+    supersedes: null
+  - id: p-keyless-free
+    version: 1
+    status: challenged
+    introduced_at: 2026-03-26
+    introduced_by_event: hydra-api-2026-03-26-fastapi-toolkit-v1
+    statement: No API key, no billing and open CORS; anyone may call any endpoint.
+    revealed_by: CORSMiddleware allow_origins * and the absence of any auth dependency
+    challenged_by: the 2026-05-05 .toledo.yaml label "type revenue" and the June 2026 "freemium RapidAPI candidate" framing, neither of which changed the code
+    claim_ids: [ha-c06, ha-c07, ha-c13]
+    event_ids: [hydra-api-2026-03-26-fastapi-toolkit-v1, hydra-api-2026-05-05-backburner-and-revenue-label]
+    supersedes: null
+  - id: p-minimal-deps
+    version: 1
+    status: active
+    introduced_at: 2026-03-26
+    introduced_by_event: hydra-api-2026-03-26-fastapi-toolkit-v1
+    statement: Three pinned framework dependencies and the standard library for everything else; no ML, no parsers, no clients.
+    revealed_by: requirements.txt; hashlib/re/json/difflib/urllib usage in main.py
+    claim_ids: [ha-c21]
+    event_ids: [hydra-api-2026-03-26-fastapi-toolkit-v1]
+    supersedes: null
+  - id: p-self-documenting
+    version: 1
+    status: active
+    introduced_at: 2026-03-26
+    introduced_by_event: hydra-api-2026-03-26-fastapi-toolkit-v1
+    statement: The API documents itself; typed request models with field descriptions feed generated Swagger and ReDoc pages.
+    revealed_by: FastAPI(docs_url, redoc_url) and pydantic Field descriptions
+    claim_ids: [ha-c17]
+    event_ids: [hydra-api-2026-03-26-fastapi-toolkit-v1]
+    supersedes: null
+  - id: p-render-first-hosting
+    version: 1
+    status: superseded
+    introduced_at: 2026-03-26
+    introduced_by_event: hydra-api-2026-03-26-render-blueprint-and-worker-port
+    statement: Host on Render's free plan from a blueprint with auto-deploy on push.
+    revealed_by: render.yaml
+    superseded_note: >-
+      Superseded within the hour by the edge-first principle recorded in the sibling hydra-worker history
+      (p-edge-first there); no Render service was ever observed.
+    claim_ids: [ha-c03, ha-c05, ha-c20]
+    event_ids: [hydra-api-2026-03-26-render-blueprint-and-worker-port]
+    supersedes: null

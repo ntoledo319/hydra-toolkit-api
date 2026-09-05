@@ -1,0 +1,117 @@
+# Contradiction register — competing accounts preserved, not laundered.
+# disagreement_kind: fact | chronology | interpretation | motive | credit | outcome
+contradictions:
+  - id: hydra-api-x1
+    disputed_claim: Is this repository HYDRA's predecessor or a parallel variant of the Worker?
+    disagreement_kind: chronology
+    claim_ids: [ha-c04, ha-c08, ha-c09]
+    accounts:
+      - source_ids: [src-git-hydra-api, src-git-hydra-worker]
+        date: 2026-03-26
+        proximity: contemporaneous machine record
+        says: The FastAPI root commit precedes the Worker root commit by 75 minutes and the Worker's own banner links back here as its docs.
+      - source_ids: [src-git-hydra-worker, src-tc-master-portfolio]
+        date: 2026-04-03
+        proximity: author, eight days after the event
+        says: "'Also Available: Python/FastAPI version' and, in June, 'a parallel Python/FastAPI variant for a possible RapidAPI listing' — a sibling, not an ancestor."
+      - source_ids: [src-tc-registry-hydra]
+        date: 2026-08-03
+        proximity: agent-written, four months later
+        says: "'earlier Python/FastAPI predecessor, same feature set, targeting Render, never deployed ... Superseded/shelved.'"
+    best_supported_reading: >-
+      Chronologically the predecessor by 75 minutes and functionally the origin of the Worker's code; strategically a parallel
+      variant kept for Python readers and a marketplace listing that never materialised. "Superseded" describes the deployment
+      outcome, not a decision anyone recorded.
+    confidence: strongly_supported
+    resolving_evidence: The authoring session logs of 2026-03-26 or an owner statement about why two implementations were made the same night.
+  - id: hydra-api-x2
+    disputed_claim: Was this service deployed to Render?
+    disagreement_kind: outcome
+    claim_ids: [ha-c03, ha-c05, ha-c11]
+    accounts:
+      - source_ids: [src-git-hydra-api]
+        date: 2026-03-26
+        proximity: contemporaneous
+        says: render.yaml declares a free web service with autoDeploy true, which reads as an intention to run it.
+      - source_ids: [src-tc-root-reports-2026-07]
+        date: 2026-07-20
+        proximity: owner-side planning, four months later
+        says: "'hydra-api ... ship_now ... Render -> Blueprint -> connect ... 20m' — still a to-do."
+      - source_ids: [src-tc-audit-2026-08, src-live-probe]
+        date: 2026-08-06
+        proximity: measurement
+        says: hydra-toolkit-api.onrender.com returns 404 with x-render-routing no-server (also on 2026-09-04).
+    best_supported_reading: >-
+      Never deployed. Every dated record after the blueprint treats deployment as future work, and no probe ever found a service.
+    confidence: strongly_supported
+    resolving_evidence: The Render dashboard's service list and event history for the owner's account.
+  - id: hydra-api-x3
+    disputed_claim: Is this a revenue asset?
+    disagreement_kind: interpretation
+    claim_ids: [ha-c06, ha-c07, ha-c13]
+    accounts:
+      - source_ids: [src-tc-meta-inventory-2026-05]
+        date: 2026-05-05
+        proximity: owner tooling
+        says: ".toledo.yaml: type revenue."
+      - source_ids: [src-git-hydra-api, src-tc-audit-2026-08]
+        date: 2026-08-06
+        proximity: code and measurement
+        says: No auth, no billing, no key; "labeled revenue but has no billing/auth and gives everything away free."
+    best_supported_reading: >-
+      The label records an aspiration (a possible RapidAPI freemium listing) that the code never implemented; as built it is a free reference implementation.
+    confidence: confirmed
+    resolving_evidence: A RapidAPI listing with a paid tier, or a code change adding metering.
+  - id: hydra-api-x4
+    disputed_claim: How many endpoints does HYDRA have?
+    disagreement_kind: fact
+    claim_ids: [ha-c16]
+    accounts:
+      - source_ids: [src-git-hydra-api]
+        date: 2026-03-26
+        proximity: contemporaneous
+        says: "README: '20+ endpoints'; code: 24 utility routes."
+      - source_ids: [src-git-hydra-worker]
+        date: 2026-04-03
+        proximity: contemporaneous
+        says: "README badge and GitHub description: 22; live banner hard-codes 20."
+    best_supported_reading: 24 utility routes plus two meta routes in both implementations; the published numbers are marketing approximations that were never reconciled.
+    confidence: confirmed
+    resolving_evidence: none needed; a README correction would close it.
+  - id: hydra-api-x5
+    disputed_claim: What was this repository's uncommitted baseline when the history reconstruction began?
+    disagreement_kind: fact
+    claim_ids: [ha-c18]
+    accounts:
+      - source_ids: [src-leaf-brief-2026-09-04]
+        date: 2026-09-04
+        proximity: lead agent's dispatch record
+        says: "backburner/hydra-api: ' M .env.example'; active/hydra-worker: the bytecode/.claude/.toledo.yaml set."
+      - source_ids: [src-worktree-2026-09-04]
+        date: 2026-09-04
+        proximity: direct measurement
+        says: "hydra-api: ' M __pycache__/main.cpython-312.pyc', '?? .claude/', '?? .toledo.yaml'; hydra-worker clean; there is no .env.example in this repository."
+    best_supported_reading: The brief cross-wired the two HYDRA repositories' baselines; the measured state is authoritative and was preserved untouched.
+    confidence: confirmed
+    resolving_evidence: none needed; recorded so an automated verifier run with the brief's baseline is explicable.
+  - id: hydra-api-x6
+    disputed_claim: What should become of this repository?
+    disagreement_kind: interpretation
+    claim_ids: [ha-c09, ha-c17]
+    accounts:
+      - source_ids: [src-tc-estate-audit-2026-08]
+        date: 2026-08-06
+        proximity: rule-generated verdict
+        says: "KILL — trivial: under 500 logical lines and under 10 commits."
+      - source_ids: [src-tc-audit-2026-08]
+        date: 2026-08-06
+        proximity: agent judgement
+        says: "PARK / FIX — point the public README at the live Worker and delete the stale render.yaml/.pyc, or make it private; drop the revenue label or add metering."
+      - source_ids: [src-tc-registry-hydra]
+        date: 2026-08-03
+        proximity: agent judgement
+        says: Superseded/shelved.
+    best_supported_reading: >-
+      A dormant reference copy whose only distinctive value is the generated Swagger/ReDoc documentation and Python readability; none of the verdicts has been acted on.
+    confidence: plausible
+    resolving_evidence: An owner decision recorded as a history event.

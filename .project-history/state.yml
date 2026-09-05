@@ -1,0 +1,68 @@
+# Audit anchors and reproducibility metadata. Updated by the full/incremental audit process, never by render.
+repository: ntoledo319/hydra-toolkit-api
+local_path: /home/nick/Development/backburner/hydra-api
+audit_date: 2026-09-04
+audit_tooling: "git 2.x, python3 3.12.3, node v24.18.0, gh (read-only), curl; scripts/project_history.py"
+full_audit_anchor: 0106964e92fa29d6a9cde46fa652839cb282b302
+incremental_anchor: 0106964e92fa29d6a9cde46fa652839cb282b302
+root_commit: ff404c6030c6529b28dbc50ff7b80f1031eb7916
+head_at_audit: 0106964e92fa29d6a9cde46fa652839cb282b302
+branch_at_audit: master
+reachable_commit_count: 3
+refs_examined:
+  - refs/heads/master
+  - refs/remotes/origin/master
+remote_state_at_audit: "origin/master 0106964e92fa29d6a9cde46fa652839cb282b302 == local master (git ls-remote 2026-09-04)"
+clone_shape: full clone; not shallow, not partial, no stash, no notes, no submodules, no worktrees, reflog 3 entries
+exclusion_counts:
+  commits_total: 3
+  commits_deep_read: 3
+  binary_diffs_not_inspected: 1
+  generated_or_vendored_files_skipped: 0
+  history_only_commits: 0
+  uncommitted_paths_treated_as_present_tense: 3
+source_classes:
+  direct: 5
+  contemporaneous: 3
+  retrospective: 11
+  behavioral: 2
+  external: 4
+  inferred: 0
+external_retrieval_dates:
+  github_api: 2026-09-04
+  live_probes: 2026-09-04
+  owner_documents: 2026-09-04
+inaccessible_sources:
+  - Render dashboard and deploy logs for hydra-toolkit-api (would settle whether a service was ever created)
+  - RapidAPI provider account (would settle whether any HYDRA listing exists)
+  - AI-assistant authoring session of 2026-03-26 in the former CascadeProjects directory (would reveal intent behind the same-night port)
+  - Any pre-repository design notes; none were found in the owner's synced documents
+evidence_gaps:
+  - Why two implementations were made the same night is inferred from timing and code identity, never stated.
+  - The reason the Worker won as the deployed surface is inferred from the Worker's marketing copy (cost, latency), not from a decision record.
+  - Whether the 2026-07-20 local bytecode regeneration was a deploy attempt is inferred from a file mtime.
+  - The purpose of the 2026-08-16 assistant session in this directory is unknown.
+  - Whether a RapidAPI listing ever existed is unknown.
+rewritten_history: "no — the September 2026 credential purge classified this history as containing only public-configuration pattern matches, performed no rewrite, and origin/master still equals local master; nothing in the reachable graph shows force-push or rebase evidence"
+coverage_matrix:
+  eras:
+    - era: prehistory (SPECTRUM-lite/NoHustle 2025-08 and the unrecorded idea before 2026-03-26)
+      git: related repositories fully read
+      docs: owner reports read
+      external: GitHub metadata read
+      gaps: origin of the idea and the authoring prompt unrecorded
+    - era: the one-night build (2026-03-26)
+      git: 3 of 3 commits deep-read
+      docs: README read
+      external: GitHub creation and push timestamps read
+      gaps: intent behind the port inferred
+    - era: dormancy and reinterpretation (2026-04..2026-09)
+      git: no commits; working tree read
+      docs: portfolio, audit, ship-queue, marketing and registry records read
+      external: live probes and GitHub metadata
+      gaps: no Render/RapidAPI account evidence
+completeness_statement: >-
+  All reachable Git objects and every dated owner document mentioning this project were reviewed. That is not the same as
+  knowing the project's full history: the design was made inside an AI-assisted session whose transcript is unavailable,
+  the deployment platforms were not consulted, and the only account of intent is the code itself plus later, agent-written
+  retrospectives.

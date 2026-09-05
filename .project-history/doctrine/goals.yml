@@ -1,0 +1,57 @@
+# Versioned goal lifecycle. status: proposed | active | narrowed | expanded | blocked | achieved | abandoned | superseded.
+goals:
+  - id: g-ship-toolkit-v1
+    version: 1
+    status: achieved
+    introduced_at: 2026-03-26
+    achieved_at: 2026-03-26
+    statement: Ship a working "20+ endpoint" developer utility API in a single sitting.
+    definition_of_success: All routes answer locally; README and Swagger describe them.
+    claim_ids: [ha-c01, ha-c02]
+    event_ids: [hydra-api-2026-03-26-fastapi-toolkit-v1]
+    supersedes: null
+  - id: g-render-free-deploy
+    version: 1
+    status: abandoned
+    introduced_at: 2026-03-26
+    abandoned_at: 2026-03-26
+    statement: Run the service on Render's free plan from the blueprint.
+    definition_of_success: A live onrender.com URL answering /health.
+    abandonment_note: >-
+      Overtaken the same night by the Cloudflare Worker port, which became the deployed surface; still listed as a
+      "ship_now" item on 2026-07-20 and never executed. Recorded as abandoned by outcome, not by any written decision.
+    claim_ids: [ha-c03, ha-c05, ha-c20]
+    event_ids: [hydra-api-2026-03-26-render-blueprint-and-worker-port]
+    supersedes: null
+  - id: g-python-reference
+    version: 1
+    status: active
+    introduced_at: 2026-04-03
+    review_by: 2026-12-31
+    statement: Remain the Python/FastAPI reference for readers who prefer Python or want generated Swagger/ReDoc documentation.
+    definition_of_success: The repository stays readable, public and linked from the Worker README as the Python version.
+    claim_ids: [ha-c08, ha-c17]
+    event_ids: [hydra-api-2026-03-26-render-blueprint-and-worker-port]
+    supersedes: null
+  - id: g-rapidapi-listing
+    version: 1
+    status: blocked
+    introduced_at: 2026-04-03
+    review_by: 2026-12-31
+    statement: Offer HYDRA on RapidAPI for marketplace discovery, possibly as a freemium tier.
+    definition_of_success: A published listing with at least a free tier and a decided price.
+    blocked_note: "Marketing gate G1 fails on 'no price set' (KILL-LIST.md); no listing has been evidenced (ha-c13)."
+    claim_ids: [ha-c08, ha-c13]
+    event_ids: [hydra-api-2026-05-05-backburner-and-revenue-label]
+    supersedes: null
+  - id: g-revenue-classification
+    version: 1
+    status: blocked
+    introduced_at: 2026-05-05
+    review_by: 2026-12-31
+    statement: Be a revenue asset (the .toledo.yaml type).
+    definition_of_success: Any paid usage or a listed price.
+    blocked_note: No auth, metering or billing exists in code; every audit calls the label aspirational.
+    claim_ids: [ha-c07, ha-c09]
+    event_ids: [hydra-api-2026-05-05-backburner-and-revenue-label, hydra-api-2026-08-06-audits-park-fix]
+    supersedes: null
